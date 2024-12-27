@@ -55,6 +55,7 @@ MODELS = {
     "inkplate_6_v2": InkplateModel.INKPLATE_6_V2,
     "inkplate_5": InkplateModel.INKPLATE_5,
     "inkplate_5_v2": InkplateModel.INKPLATE_5_V2,
+    "inkplate_6_flick": InkplateModel.INKPLATE_6_FLICK,
 }
 
 CONFIG_SCHEMA = cv.All(
