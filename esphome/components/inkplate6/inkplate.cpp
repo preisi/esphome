@@ -230,7 +230,7 @@ void Inkplate6::eink_off_() {
 
   this->write_byte(0x01, 0x4f);  // Disable 3V3 to the panel
 
-  if (this->model_ != INKPLATE_6_PLUS)
+  if (this->model_ != INKPLATE_6_PLUS && this->model_ != INKPLATE_6_FLICK)
     this->wakeup_pin_->digital_write(false);
 
   pins_z_state_();
@@ -335,6 +335,16 @@ void Inkplate6::display1b_() {
     clean_fast_(0, 5);
     clean_fast_(2, 1);
     clean_fast_(1, 15);
+  } else if (this->model_ == INKPLATE_6_FLICK) {
+    clean_fast_(0, 5);
+    clean_fast_(1, 15);
+    clean_fast_(2, 1);
+    clean_fast_(0, 15);
+    clean_fast_(2, 1);
+    clean_fast_(1, 15);
+    clean_fast_(2, 1);
+    clean_fast_(0, 15);
+    clean_fast_(2, 1);
   } else {
     clean_fast_(0, 1);
     clean_fast_(1, 21);
@@ -351,7 +361,12 @@ void Inkplate6::display1b_() {
   uint32_t data_mask = this->get_data_pin_mask_();
   ESP_LOGV(TAG, "Display1b start loops (%ums)", millis() - start_time);
 
-  int rep = (this->model_ == INKPLATE_6_V2) ? 5 : 4;
+  int rep = 5;
+  if (this->model_ == INKPLATE_6_V2) {
+    rep = 4;
+  } else if (this->model_ == INKPLATE_6_FLICK) {
+    rep = 1;
+  }
 
   for (int k = 0; k < rep; k++) {
     buffer_ptr = &this->buffer_[this->get_buffer_length_() - 1];
@@ -388,23 +403,23 @@ void Inkplate6::display1b_() {
   vscan_start_();
   for (int i = 0, im = this->get_height_internal(); i < im; i++) {
     buffer_value = *(buffer_ptr--);
-    data = this->model_ == INKPLATE_6_PLUS ? LUTB[(buffer_value >> 4) & 0x0F] : LUT2[(buffer_value >> 4) & 0x0F];
+    data = (this->model_ == INKPLATE_6_PLUS || this->model_ == INKPLATE_6_FLICK) ? LUTB[(buffer_value >> 4) & 0x0F] : LUT2[(buffer_value >> 4) & 0x0F];
     hscan_start_(this->pin_lut_[data] | clock);
-    data = this->model_ == INKPLATE_6_PLUS ? LUTB[buffer_value & 0x0F] : LUT2[buffer_value & 0x0F];
+    data = (this->model_ == INKPLATE_6_PLUS || this->model_ == INKPLATE_6_FLICK) ? LUTB[buffer_value & 0x0F] : LUT2[buffer_value & 0x0F];
     GPIO.out_w1ts = this->pin_lut_[data] | clock;
     GPIO.out_w1tc = data_mask | clock;
 
     for (int j = 0, jm = (this->get_width_internal() / 8) - 1; j < jm; j++) {
       buffer_value = *(buffer_ptr--);
-      data = this->model_ == INKPLATE_6_PLUS ? LUTB[(buffer_value >> 4) & 0x0F] : LUT2[(buffer_value >> 4) & 0x0F];
+      data = (this->model_ == INKPLATE_6_PLUS || this->model_ == INKPLATE_6_FLICK) ? LUTB[(buffer_value >> 4) & 0x0F] : LUT2[(buffer_value >> 4) & 0x0F];
       GPIO.out_w1ts = this->pin_lut_[data] | clock;
       GPIO.out_w1tc = data_mask | clock;
-      data = this->model_ == INKPLATE_6_PLUS ? LUTB[buffer_value & 0x0F] : LUT2[buffer_value & 0x0F];
+      data = (this->model_ == INKPLATE_6_PLUS || this->model_ == INKPLATE_6_FLICK) ? LUTB[buffer_value & 0x0F] : LUT2[buffer_value & 0x0F];
       GPIO.out_w1ts = this->pin_lut_[data] | clock;
       GPIO.out_w1tc = data_mask | clock;
     }
     // New Inkplate6 panel doesn't need last clock
-    if (this->model_ != INKPLATE_6_V2) {
+    if (this->model_ != INKPLATE_6_V2 && this->model_ != INKPLATE_6_FLICK) {
       GPIO.out_w1ts = clock;
       GPIO.out_w1tc = data_mask | clock;
     }
@@ -458,6 +473,16 @@ void Inkplate6::display3b_() {
     clean_fast_(0, 5);
     clean_fast_(2, 1);
     clean_fast_(1, 15);
+  } else if (this->model_ == INKPLATE_6_FLICK) {
+    clean_fast_(0, 5);
+    clean_fast_(1, 15);
+    clean_fast_(2, 1);
+    clean_fast_(0, 15);
+    clean_fast_(2, 1);
+    clean_fast_(1, 15);
+    clean_fast_(2, 1);
+    clean_fast_(0, 15);
+    clean_fast_(2, 1);
   } else {
     clean_fast_(0, 1);
     clean_fast_(1, 21);
