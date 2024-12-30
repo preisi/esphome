@@ -19,7 +19,7 @@ static const uint8_t CYPRESS_TOUCH_ACT_INTRVL_DFTL = 0x00;
 static const uint8_t CYPRESS_TOUCH_TCH_TMOUT_DFTL = 0xFF;
 static const uint8_t CYPRESS_TOUCH_LP_INTRVL_DFTL = 0x0A;
 
-float CypressTouchscreen::get_setup_priority() const { return setup_priority::HARDWARE_LATE - 1.0f; }
+float CypressTouchscreen::get_setup_priority() const { return setup_priority::HARDWARE - 1.0f; }
 
 void CypressTouchscreen::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Cypress Touchscreen...");
