@@ -130,8 +130,8 @@ bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
   return true;
 }
 
-bool CypressTouchscreen:::load_bootloader_registers(CypressTouchscreen:::bootloader_data *blData);
-  uint8_t data[sizeof(CypressTouchscreen::bootloader_data)];
+bool CypressTouchscreen:::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData);
+  uint8_t data[sizeof(CypressTouchscreen::bootloader_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, data, sizeof(data))) {
     return false;
   }
@@ -151,7 +151,7 @@ bool CypressTouchscreen::exit_bootloader_mode() {
 
   delay(500);
 
-  CypressTouchscreen::bootloader_data blData;
+  CypressTouchscreen::bootloader_data_t blData;
   if (this->load_bootloader_registers(&blData)) {
     return false;
   }
