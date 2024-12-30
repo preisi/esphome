@@ -59,14 +59,14 @@ void CypressTouchscreen::setup() {
     return;
   }
 
-  if (!this->set_sysinfo_mode(this->sysinfo_data_)) {
+  if (!this->set_sysinfo_mode(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo mode for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
 
-  if (!this->set_sysinfo_registers(this->sysinfo_data_)) {
+  if (!this->set_sysinfo_registers(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo registers for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
