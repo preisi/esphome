@@ -17,6 +17,7 @@ CypressTouchscreen = cypress_touch_ns.class_(
 
 CONF_CYPRESS_TOUCH_ID = "cypress_touch_id"
 CONF_RTS_PIN = "rts_pin"
+CONF_ENABLE_PIN = "enable_pin"
 
 CONFIG_SCHEMA = touchscreen.TOUCHSCREEN_SCHEMA.extend(
     cv.Schema(
@@ -26,6 +27,7 @@ CONFIG_SCHEMA = touchscreen.TOUCHSCREEN_SCHEMA.extend(
                 pins.internal_gpio_input_pin_schema
             ),
             cv.Required(CONF_RTS_PIN): pins.gpio_output_pin_schema,
+            cv.Required(CONF_ENABLE_PIN): pins.gpio_output_pin_schema,
         }
     ).extend(i2c.i2c_device_schema(0x24))
 )
@@ -40,3 +42,5 @@ async def to_code(config):
     cg.add(var.set_interrupt_pin(interrupt_pin))
     rts_pin = await cg.gpio_pin_expression(config[CONF_RTS_PIN])
     cg.add(var.set_rts_pin(rts_pin))
+    enable_pin = await cg.gpio_pin_expression(config[CONF_ENABLE_PIN])
+    cg.add(var.set_enable_pin(enable_pin))

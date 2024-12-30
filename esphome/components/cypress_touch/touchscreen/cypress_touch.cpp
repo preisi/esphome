@@ -26,6 +26,9 @@ void CypressTouchscreen::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Cypress Touchscreen...");
 
   this->rts_pin_->setup();
+  this->enable_pin_->setup();
+
+  this->set_power(true);
 
   this->hard_reset_();
 
@@ -89,6 +92,20 @@ void CypressTouchscreen::setup() {
   this->y_raw_max_ = 1023;
   this->invert_y_ = true;
   this->swap_x_y_ = true;
+}
+
+void CypressTouchscreen::set_power(bool enable) {
+  if (enable) {
+    this->enable_pin_->digital_write(true);
+    delay(50);
+    this->rts_pin_->digital_write(true);
+    delay(50);
+
+  } else {
+    this->enable_pin_->digital_write(false);
+    delay(50);
+    this->rts_pin_->digital_write(false);
+  }
 }
 
 bool CypressTouchscreen::ping_touchscreen(int retries) {
