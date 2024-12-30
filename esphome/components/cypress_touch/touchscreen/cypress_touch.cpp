@@ -130,7 +130,7 @@ bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
   return true;
 }
 
-bool CypressTouchscreen:::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData) {
+bool CypressTouchscreen::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData) {
   uint8_t data[sizeof(CypressTouchscreen::bootloader_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, data, sizeof(data))) {
     return false;
@@ -253,7 +253,7 @@ void CypressTouchscreen::set_power_state(bool enable) {
 bool CypressTouchscreen::get_power_state() {
   // tp: somewhat done...
   uint8_t state;
-  this->write(CYPRESS_TOUCH_BASE_ADDR, 1);
+  this->write(&CYPRESS_TOUCH_BASE_ADDR, 1);
   this->read(state, 1);
   // TODO: this is actually one of three values:
   // CYPRESS_TOUCH_OPERATE_MODE, CYPRESS_TOUCH_LOW_POWER_MODE, CYPRESS_TOUCH_DEEP_SLEEP_MODE
