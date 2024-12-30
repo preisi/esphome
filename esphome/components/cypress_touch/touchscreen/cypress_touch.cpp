@@ -165,7 +165,7 @@ bool CypressTouchscreen::exit_bootloader_mode() {
   delay(500);
 
   CypressTouchscreen::bootloader_data_t blData;
-  if (this->load_bootloader_registers(&blData)) {
+  if (!this->load_bootloader_registers(&blData)) {
     ESP_LOGE(TAG, "exit_bootloader_mode: loading bootloader registers failed!");
     return false;
   }
