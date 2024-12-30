@@ -130,7 +130,7 @@ bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
   return true;
 }
 
-bool CypressTouchscreen::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData) {
+bool CypressTouchscreen::load_bootloader_registers(CypressTouchscreen::bootloader_data_t *blData) {
   uint8_t data[sizeof(CypressTouchscreen::bootloader_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, data, sizeof(data))) {
     return false;
@@ -237,7 +237,7 @@ void CypressTouchscreen::update_touches() {
   // XXX: rotation?
 
   ESP_LOGV(TAG, "Touch count: %d", touch_count);
-  for (int i = 0; i < touchreport.fingers; ++i) {
+  for (int i = 0; i < touchReport.fingers; ++i) {
     this->add_raw_touch_position_(i, touchReport.x[i], touchReport.y[i]);
   }
 }
