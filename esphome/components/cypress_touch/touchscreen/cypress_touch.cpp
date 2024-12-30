@@ -244,7 +244,7 @@ void CypressTouchscreen::update_touches() {
 
   if (touchReport.fingers != 1 && touchReport.fingers != 2) {
     // This shouldn't happen, let's return for now..
-    ESP_LOGW(TAG, "Invalid number of touches detected, ignoring...");
+    ESP_LOGW(TAG, "Invalid number of touches detected (%d), ignoring...", touchReport.fingers);
     return;
   };
 
