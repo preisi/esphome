@@ -28,7 +28,6 @@ void CypressTouchscreen::setup() {
   this->enable_pin_->setup();
 
   this->set_power(true);
-  while(1) {}
 
   this->hard_reset_();
 
