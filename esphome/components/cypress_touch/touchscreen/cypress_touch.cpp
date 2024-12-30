@@ -145,6 +145,7 @@ bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
 bool CypressTouchscreen::load_bootloader_registers(CypressTouchscreen::bootloader_data_t *blData) {
   uint8_t data[sizeof(CypressTouchscreen::bootloader_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, data, sizeof(data))) {
+    ESP_LOGE(TAG, "load_bootloader_registers: read failed!");
     return false;
   }
   memcpy(blData, data, 16);
@@ -165,6 +166,7 @@ bool CypressTouchscreen::exit_bootloader_mode() {
 
   CypressTouchscreen::bootloader_data_t blData;
   if (this->load_bootloader_registers(&blData)) {
+    ESP_LOGE(TAG, "exit_bootloader_mode: loading bootloader registers failed!");
     return false;
   }
 
