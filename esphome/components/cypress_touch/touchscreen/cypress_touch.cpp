@@ -50,7 +50,7 @@ void CypressTouchscreen::setup() {
     return;
   }
 
-  this->load_bootloader_registers(this->bootloader_data_);
+  this->load_bootloader_registers(&this->bootloader_data_);
 
   if (!this->exit_bootloader_mode()) {
     ESP_LOGE(TAG, "Failed to exit Cypress bootloader mode!");
@@ -59,14 +59,14 @@ void CypressTouchscreen::setup() {
     return;
   }
 
-  if (!this->set_sysinfo_mode(this->sys_data)) {
+  if (!this->set_sysinfo_mode(this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo mode for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
 
-  if (!this->set_sysinfo_registers(this->sys_data)) {
+  if (!this->set_sysinfo_registers(this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo registers for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
@@ -96,7 +96,7 @@ void CypressTouchscreen::setup() {
 }
 
 bool CypressTouchscreen::ping_touchscreen(int retries) {
-  auto ret = i2c::ERROR_NOT_ACKNOWLEGED;
+  auto ret = i2c::ERROR_NOT_ACKNOWLEDGED;
   for (int i = 0; i < retries; ++i) {
     ret = this->write(NULL, 0);
     if (ret == i2c::ERROR_OK) {
@@ -117,7 +117,7 @@ bool CypressTouchscreen::write_registers(uint8_t cmd, uint8_t *buffer, int len) 
 }
 
 bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
-  if (this->write(cmd, 1) != i2c::ERROR_OK) {
+  if (this->write(&cmd, 1) != i2c::ERROR_OK) {
     return false;
   }
   int offset = 0;
@@ -130,7 +130,7 @@ bool CypressTouchscreen::read_registers(uint8_t cmd, uint8_t *buffer, int len) {
   return true;
 }
 
-bool CypressTouchscreen:::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData);
+bool CypressTouchscreen:::load_bootloader_registers(CypressTouchscreen:::bootloader_data_t *blData) {
   uint8_t data[sizeof(CypressTouchscreen::bootloader_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, data, sizeof(data))) {
     return false;
@@ -160,11 +160,11 @@ bool CypressTouchscreen::exit_bootloader_mode() {
   return (blData.bl_status & 0x10) >> 4;
 }
 
-bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data *data) {
+bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data_t *data) {
   uint8_t cmds[] = {CYPRESS_TOUCH_BASE_ADDR, CYPRESS_TOUCH_SYSINFO_MODE};
   this->write(cmds, 2);
   delay(20);
-  uint8_t buffer[sizeof(CypressTouchscreen::sysinfo_data)];
+  uint8_t buffer[sizeof(CypressTouchscreen::sysinfo_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, buffer, sizeof(buffer))) {
     return false;
   }
@@ -176,7 +176,7 @@ bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data *data
   return true;
 }
 
-bool CypressTouchscreen::set_sysinfo_registers(sysinfo_data *data) {
+bool CypressTouchscreen::set_sysinfo_registers(sysinfo_data_t *data) {
   data->act_intrvl = CYPRESS_TOUCH_ACT_INTRVL_DFTL;
   data->tch_tmout = CYPRESS_TOUCH_TCH_TMOUT_DFTL;
   data->lp_intrvl = CYPRESS_TOUCH_LP_INTRVL_DFTL;
@@ -196,14 +196,14 @@ void CypressTouchscreen::handshake() {
   this->write_registers(CYPRESS_TOUCH_BASE_ADDR, &hstModeReg, 1);
 }
 
-bool CypressTouchscreen::get_touch_data(CypressTouchscreen::touch_data *report) {
+bool CypressTouchscreen::get_touch_data(CypressTouchscreen::touch_data_t *report) {
   if (report == NULL) {
     return false;
   }
 
-  memset(report, 0, sizeof(CypressTouchscreen::touch_data));
+  memset(report, 0, sizeof(CypressTouchscreen::touch_data_t));
 
-  uint8_t regs[sizeof(CypressTouchscreen::sysinfo_data)];
+  uint8_t regs[sizeof(CypressTouchscreen::sysinfo_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, regs, sizeof(regs))) {
     return false;
   }
@@ -222,7 +222,7 @@ bool CypressTouchscreen::get_touch_data(CypressTouchscreen::touch_data *report) 
 
 // equivalent to Touch::tsGetData
 void CypressTouchscreen::update_touches() {
-  CypressTouchscreen::touch_data touchReport;
+  CypressTouchscreen::touch_data_t touchReport;
 
   if (!this->get_touch_data(&touchReport)) {
     return;
