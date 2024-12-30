@@ -254,7 +254,7 @@ bool CypressTouchscreen::get_power_state() {
   // tp: somewhat done...
   uint8_t state;
   this->write(&CYPRESS_TOUCH_BASE_ADDR, 1);
-  this->read(state, 1);
+  this->read(&state, 1);
   // TODO: this is actually one of three values:
   // CYPRESS_TOUCH_OPERATE_MODE, CYPRESS_TOUCH_LOW_POWER_MODE, CYPRESS_TOUCH_DEEP_SLEEP_MODE
   // -> add enum?
