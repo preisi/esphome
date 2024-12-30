@@ -171,7 +171,7 @@ bool CypressTouchscreen::exit_bootloader_mode() {
   }
 
   // Check for validity
-  return (blData.bl_status & 0x10) >> 4;
+  return !((blData.bl_status & 0x10) >> 4);
 }
 
 bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data_t *data) {
