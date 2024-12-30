@@ -34,15 +34,15 @@ class CypressTouchscreen : public Touchscreen, public i2c::I2CDevice {
   bool ping_touchscreen(int retries);
   bool write_registers(uint8_t cmd, uint8_t *buffer, int len);
   bool read_registers(uint8_t cmd, uint8_t *buffer, int len);
-  bool load_bootloader_registers(bootloader_data *blData);
+  bool load_bootloader_registers(struct bootloader_data *blData);
   bool exit_bootloader_mode();
-  bool set_sysinfo_mode(sysinfo_data *data);
+  bool set_sysinfo_mode(struct sysinfo_data *data);
   bool set_sysinfo_registers(sysinfo_data *data);
   void handshake();
   bool get_touch_data(touch_data *report);
 
 
-  struct bootloader_data {
+  typedef struct bootloader_data {
     uint8_t bl_file;
     uint8_t bl_status;
     uint8_t bl_error;
@@ -59,7 +59,7 @@ class CypressTouchscreen : public Touchscreen, public i2c::I2CDevice {
     uint8_t cid_0;
     uint8_t cid_1;
     uint8_t cid_2;
-  };
+  } bootloader_data_t;
 
   struct sysinfo_data {
     uint8_t hst_mode;
@@ -91,7 +91,7 @@ class CypressTouchscreen : public Touchscreen, public i2c::I2CDevice {
     uint8_t detectionType;
   };
 
-  tspbootloader_data bootloader_data_;
+  bootloader_data_t bootloader_data_;
 };
 
 }  // namespace cypress_touch
