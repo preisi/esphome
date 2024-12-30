@@ -22,6 +22,7 @@ static const uint8_t CYPRESS_TOUCH_LP_INTRVL_DFTL = 0x0A;
 float CypressTouchscreen::get_setup_priority() const { return setup_priority::HARDWARE - 1.0f; }
 
 void CypressTouchscreen::setup() {
+  while(1) {}
   ESP_LOGCONFIG(TAG, "Setting up Cypress Touchscreen...");
 
   this->rts_pin_->setup();
