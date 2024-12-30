@@ -27,7 +27,7 @@ CONFIG_SCHEMA = touchscreen.TOUCHSCREEN_SCHEMA.extend(
             ),
             cv.Required(CONF_RTS_PIN): pins.gpio_output_pin_schema,
         }
-    ).extend(i2c.i2c_device_schema(0x15))
+    ).extend(i2c.i2c_device_schema(0x24))
 )
 
 

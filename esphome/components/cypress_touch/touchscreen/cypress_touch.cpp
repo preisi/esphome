@@ -28,7 +28,7 @@ void CypressTouchscreen::setup() {
 
   this->hard_reset_();
 
-  ESP_LOGI(TAG, "Pinging Cypress touchscreen...");
+  ESP_LOGV(TAG, "Pinging Cypress touchscreen...");
   if (!this->ping_touchscreen(5)) {
     ESP_LOGE(TAG, "Failed to ping Cypress Touchscreen!");
     this->interrupt_pin_->detach_interrupt();
