@@ -13,7 +13,7 @@ using namespace touchscreen;
 
 class CypressTouchscreen : public Touchscreen, public i2c::I2CDevice {
  public:
-  //float get_setup_priority() const override;
+  float get_setup_priority() const override;
   void setup() override;
   void dump_config() override;
 
