@@ -21,20 +21,14 @@ static const uint8_t CYPRESS_TOUCH_ACT_INTRVL_DFTL = 0x00;
 static const uint8_t CYPRESS_TOUCH_TCH_TMOUT_DFTL = 0xFF;
 static const uint8_t CYPRESS_TOUCH_LP_INTRVL_DFTL = 0x0A;
 
-static const uint8_t SOFT_RESET_CMD[4] = {0x77, 0x77, 0x77, 0x77};
-static const uint8_t HELLO[4] = {0x55, 0x55, 0x55, 0x55};
-static const uint8_t GET_X_RES[4] = {0x53, 0x60, 0x00, 0x00};
-static const uint8_t GET_Y_RES[4] = {0x53, 0x63, 0x00, 0x00};
-static const uint8_t GET_POWER_STATE_CMD[4] = {0x53, 0x50, 0x00, 0x01};
-
 void CypressTouchscreen::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Cypress Touchscreen...");
 
   this->rts_pin_->setup();
-  // ts TODO: power?
 
   this->hard_reset_();
 
+  ESP_LOGI(TAG, "Pinging Cypress touchscreen...");
   if (!this->ping_touchscreen(5)) {
     ESP_LOGE(TAG, "Failed to ping Cypress Touchscreen!");
     this->interrupt_pin_->detach_interrupt();
@@ -42,7 +36,7 @@ void CypressTouchscreen::setup() {
     return;
   }
 
-
+  ESP_LOGI(TAG, "Soft-resetting touchscreen...");
   if (!this->soft_reset_()) {
     ESP_LOGE(TAG, "Failed to soft reset Cypress!");
     this->interrupt_pin_->detach_interrupt();
@@ -50,6 +44,8 @@ void CypressTouchscreen::setup() {
     return;
   }
 
+  // XXX: is this even necessary?
+  ESP_LOGI(TAG, "Loading bootloader registers...");
   this->load_bootloader_registers(&this->bootloader_data_);
 
   if (!this->exit_bootloader_mode()) {
@@ -59,6 +55,7 @@ void CypressTouchscreen::setup() {
     return;
   }
 
+  ESP_LOGI(TAG, "Setting sysinfo mode...");
   if (!this->set_sysinfo_mode(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo mode for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
@@ -66,6 +63,7 @@ void CypressTouchscreen::setup() {
     return;
   }
 
+  ESP_LOGI(TAG, "Setting sysinfo registers...");
   if (!this->set_sysinfo_registers(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo registers for Cypress failed!");
     this->interrupt_pin_->detach_interrupt();
@@ -90,9 +88,6 @@ void CypressTouchscreen::setup() {
   this->y_raw_max_ = 1023;
   this->invert_y_ = true;
   this->swap_x_y_ = true;
-
-  // FIXME: tp
-  this->set_power_state(true);
 }
 
 bool CypressTouchscreen::ping_touchscreen(int retries) {
