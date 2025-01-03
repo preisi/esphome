@@ -8,7 +8,6 @@ namespace touchscreen {
 static const char *const TAG = "touchscreen";
 
 void TouchscreenInterrupt::gpio_intr(TouchscreenInterrupt *store) {
-  InterruptLock lock;
   ESP_LOGW(TAG, "TouchscreenInterrupt: triggered!");
   store->touched = true;
 }
