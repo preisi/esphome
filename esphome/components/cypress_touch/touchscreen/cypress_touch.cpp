@@ -215,7 +215,6 @@ void CypressTouchscreen::handshake() {
 }
 
 bool CypressTouchscreen::get_touch_data(CypressTouchscreen::touch_data_t *report) {
-  this->handshake();
   if (report == NULL) {
     return false;
   }
@@ -226,6 +225,8 @@ bool CypressTouchscreen::get_touch_data(CypressTouchscreen::touch_data_t *report
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, regs, sizeof(regs))) {
     return false;
   }
+  this->handshake();
+  this->store_.touched = false;
   report->x[0] = regs[3] << 8 | regs[4];
   report->y[0] = regs[5] << 8 | regs[6];
   report->z[0] = regs[7];
@@ -260,6 +261,14 @@ void CypressTouchscreen::update_touches() {
   }
 
   App.feed_wdt();
+
+  unsigned long lastInterrupt = millis();
+  while ((millis() - lastInterrupt) < 100ULL) {
+    if (this->store_.touched) {
+      lastInterrupt = millis();
+      this->handshake();
+    }
+  }
 }
 
 void CypressTouchscreen::set_power_state(bool enable) {
