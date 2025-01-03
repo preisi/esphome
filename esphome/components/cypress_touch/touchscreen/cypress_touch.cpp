@@ -16,9 +16,12 @@ static const uint8_t CYPRESS_TOUCH_LOW_POWER_MODE = 0x04;
 static const uint8_t CYPRESS_TOUCH_DEEP_SLEEP_MODE = 0x02;
 static const uint8_t CYPRESS_TOUCH_REG_ACT_INTRVL = 0x1D;
 
-static const uint8_t CYPRESS_TOUCH_ACT_INTRVL_DFTL = 0x00;
-static const uint8_t CYPRESS_TOUCH_TCH_TMOUT_DFTL = 0xFF;
-static const uint8_t CYPRESS_TOUCH_LP_INTRVL_DFTL = 0x0A;
+/* Active Power state scanning/processing refresh interval */
+static const uint8_t CYPRESS_TOUCH_ACT_INTRVL_DFTL = 0x32; /* ms (used to be 0x00) */
+/* Low Power state scanning/processing refresh interval */
+static const uint8_t CYPRESS_TOUCH_TCH_TMOUT_DFTL = 0xFF;  /* ms */
+/* Touch timeout during Active power */
+static const uint8_t CYPRESS_TOUCH_LP_INTRVL_DFTL = 0x0A;  /* ms */
 
 float CypressTouchscreen::get_setup_priority() const { return setup_priority::HARDWARE - 1.0f; }
 
