@@ -1,5 +1,4 @@
 #include "cypress_touch.h"
-#include "esphome/core/application.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
 
@@ -259,8 +258,6 @@ void CypressTouchscreen::update_touches() {
   for (int i = 0; i < touchReport.fingers; ++i) {
     this->add_raw_touch_position_(i, touchReport.x[i], touchReport.y[i]);
   }
-
-  App.feed_wdt();
 
   unsigned long lastInterrupt = millis();
   while ((millis() - lastInterrupt) < 100ULL) {
