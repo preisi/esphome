@@ -37,7 +37,6 @@ void CypressTouchscreen::setup() {
   ESP_LOGI(TAG, "Pinging Cypress touchscreen...");
   if (!this->ping_touchscreen(5)) {
     ESP_LOGE(TAG, "Failed to ping Cypress Touchscreen!");
-    this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
@@ -45,7 +44,6 @@ void CypressTouchscreen::setup() {
   ESP_LOGI(TAG, "Soft-resetting touchscreen...");
   if (!this->soft_reset_()) {
     ESP_LOGE(TAG, "Failed to soft reset Cypress!");
-    this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
@@ -56,7 +54,6 @@ void CypressTouchscreen::setup() {
 
   if (!this->exit_bootloader_mode()) {
     ESP_LOGE(TAG, "Failed to exit Cypress bootloader mode!");
-    this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
@@ -64,7 +61,6 @@ void CypressTouchscreen::setup() {
   ESP_LOGI(TAG, "Setting sysinfo mode...");
   if (!this->set_sysinfo_mode(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo mode for Cypress failed!");
-    this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
@@ -72,7 +68,6 @@ void CypressTouchscreen::setup() {
   ESP_LOGI(TAG, "Setting sysinfo registers...");
   if (!this->set_sysinfo_registers(&this->sysinfo_data_)) {
     ESP_LOGE(TAG, "Setting systeminfo registers for Cypress failed!");
-    this->interrupt_pin_->detach_interrupt();
     this->mark_failed();
     return;
   }
