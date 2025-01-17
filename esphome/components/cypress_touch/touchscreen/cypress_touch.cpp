@@ -77,7 +77,8 @@ void CypressTouchscreen::setup() {
   uint8_t distDefaultValue = 0xF8;
   this->write_registers(0x1E, &distDefaultValue, 1);
 
-  this->interrupt_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  //this->interrupt_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->interrupt_pin_->pin_mode(gpio::FLAG_INPUT);
   this->interrupt_pin_->setup();
   // XXX: only attach interrupt once during initialization?
   this->attach_interrupt_(this->interrupt_pin_, gpio::INTERRUPT_FALLING_EDGE);
