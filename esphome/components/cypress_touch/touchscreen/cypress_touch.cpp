@@ -178,11 +178,13 @@ bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data_t *da
   delay(20);
   uint8_t buffer[sizeof(CypressTouchscreen::sysinfo_data_t)];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, buffer, sizeof(buffer))) {
+	ESP_LOGE(TAG, "set_sysinfo_mode: read_registers failed");
     return false;
   }
   memcpy(data, buffer, sizeof(buffer));
   this->handshake();
   if (!data->tts_verh && !data->tts_verl) {
+	ESP_LOGE(TAG, "set_sysinfo_mode: TTS version mismatch");
     return false;
   }
   return true;
@@ -202,6 +204,7 @@ bool CypressTouchscreen::set_sysinfo_registers(sysinfo_data_t *data) {
 }
 
 void CypressTouchscreen::handshake() {
+  ESP_LOGV(TAG, "handshake");
   uint8_t hstModeReg = 0;
   this->read_registers(CYPRESS_TOUCH_BASE_ADDR, &hstModeReg, 1);
   hstModeReg ^= 0x80;
