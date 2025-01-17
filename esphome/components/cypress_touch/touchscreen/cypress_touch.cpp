@@ -150,6 +150,8 @@ bool CypressTouchscreen::load_bootloader_registers(CypressTouchscreen::bootloade
   return true;
 }
 
+#define TS_GET_BOOTLOADERMODE(reg) (((reg) &0x10) >> 4)
+
 bool CypressTouchscreen::exit_bootloader_mode() {
   uint8_t cmds[] = {
     0x00,                  // File offset
@@ -169,7 +171,10 @@ bool CypressTouchscreen::exit_bootloader_mode() {
   }
 
   // Check for validity
-  return !((blData.bl_status & 0x10) >> 4);
+  if (TS_GET_BOOTLOADERMODE(blData.bl_status))
+	  return false;
+  return true;
+  //return !((blData.bl_status & 0x10) >> 4);
 }
 
 bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data_t *data) {
