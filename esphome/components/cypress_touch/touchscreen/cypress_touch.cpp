@@ -176,7 +176,8 @@ bool CypressTouchscreen::set_sysinfo_mode(CypressTouchscreen::sysinfo_data_t *da
   uint8_t cmds[] = {CYPRESS_TOUCH_BASE_ADDR, CYPRESS_TOUCH_SYSINFO_MODE};
   this->write(cmds, 2);
   delay(20);
-  uint8_t buffer[sizeof(CypressTouchscreen::sysinfo_data_t)];
+  //uint8_t buffer[sizeof(CypressTouchscreen::sysinfo_data_t)];
+  uint8_t buffer[32];
   if (!this->read_registers(CYPRESS_TOUCH_BASE_ADDR, buffer, sizeof(buffer))) {
 	ESP_LOGE(TAG, "set_sysinfo_mode: read_registers failed");
     return false;
