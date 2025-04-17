@@ -270,6 +270,7 @@ void CypressTouchscreen::update_touches() {
   while ((millis() - lastInterrupt) < 100ULL) {
     if (this->store_.touched) {
       lastInterrupt = millis();
+      this->store_.touched = false;
       this->handshake();
     }
   }
