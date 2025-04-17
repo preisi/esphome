@@ -261,7 +261,7 @@ void CypressTouchscreen::update_touches() {
 
   // XXX: rotation?
 
-  ESP_LOGV(TAG, "Touch count: %d", touchReport.fingers);
+  ESP_LOGV(TAG, "Touch count: %d, touched: %d", touchReport.fingers, this->store_.touched);
   for (int i = 0; i < touchReport.fingers; ++i) {
     this->add_raw_touch_position_(i, touchReport.x[i], touchReport.y[i]);
   }
