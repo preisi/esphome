@@ -1,4 +1,5 @@
 #include "cypress_touch.h"
+#include "esphome/core/application.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
 
@@ -212,6 +213,7 @@ bool CypressTouchscreen::set_sysinfo_registers(sysinfo_data_t *data) {
 
 void CypressTouchscreen::handshake() {
   ESP_LOGV(TAG, "handshake");
+  App.feed_wdt();
   uint8_t hstModeReg = 0;
   this->read_registers(CYPRESS_TOUCH_BASE_ADDR, &hstModeReg, 1);
   hstModeReg ^= 0x80;
