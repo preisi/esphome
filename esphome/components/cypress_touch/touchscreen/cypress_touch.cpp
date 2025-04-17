@@ -273,6 +273,7 @@ void CypressTouchscreen::update_touches() {
       this->handshake();
     }
   }
+  ESP_LOGV(TAG, "Finished update_touches");
 }
 
 void CypressTouchscreen::set_power_state(bool enable) {
