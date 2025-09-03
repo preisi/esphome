@@ -269,6 +269,7 @@ void CypressTouchscreen::update_touches() {
   unsigned long lastInterrupt = millis();
   while ((millis() - lastInterrupt) < 100ULL) {
     if (this->store_.touched) {
+      ESP_LOGV(TAG, "Touch handshake loop");
       lastInterrupt = millis();
       this->store_.touched = false;
       this->handshake();
